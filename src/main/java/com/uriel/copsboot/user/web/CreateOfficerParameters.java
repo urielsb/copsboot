@@ -14,6 +14,7 @@ import lombok.Data;
  *
  */
 @Data
+@ValidCreateUserParameters
 public class CreateOfficerParameters {
 
 	@NotNull

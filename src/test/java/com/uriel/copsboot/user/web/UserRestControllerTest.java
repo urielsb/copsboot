@@ -3,6 +3,12 @@
  */
 package com.uriel.copsboot.user.web;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.Optional;
 
 import org.junit.Test;
@@ -87,6 +93,23 @@ public class UserRestControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("email").value(email))
 			.andExpect(MockMvcResultMatchers.jsonPath("roles").isArray())
 			.andExpect(MockMvcResultMatchers.jsonPath("roles[0]").value("OFFICER"));
+	}
+	
+	@Test
+	public void testCreateOfficerIfPasswordIsTooShot() throws Exception{
+		String email = "wim.deblawe@example.com";
+		String password = "pwd";
+		
+		CreateOfficerParameters parameters = new CreateOfficerParameters();
+		parameters.setEmail(email);
+		parameters.setPassword(password);
+		
+		mvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(parameters)))
+			.andExpect(status().isBadRequest())
+			.andDo(print());
+		
+		verify(service, never()).createOfficer(email, password);
 	}
 	
 	@TestConfiguration

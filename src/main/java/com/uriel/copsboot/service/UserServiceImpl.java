@@ -47,4 +47,9 @@ public class UserServiceImpl implements UserService {
 		return repository.findById(id.getId());
 	}
 
+	@Override
+	public Optional<User> findUserByEmail(String email) {
+		return repository.findByEmailIgnoreCase(email);
+	}
+
 }
